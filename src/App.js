@@ -1,12 +1,24 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./Components/Home";
+import Books from "./Components/Books";
+import Materials from "./Components/Materials";
+import Autentication from "./Components/Autentication";
+import Header from "./Components/Header";
+import '../src/Assets/reset.css'
+
 function App() {
   return (
-    <div>
-      <header>
-        <p>
-          ux ui is my passion
-        </p>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div>
+        <Header/>
+        <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/livros" element={<Books />} />
+            <Route path="/materiais" element={<Materials />} />
+            <Route path="/auth" element={<Autentication />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 

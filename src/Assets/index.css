@@ -1,0 +1,9 @@
+*{
+    /*colors*/
+	--color-darkbeige:#deb385;
+	--color-lightbeige: #f3e6d8;
+	--color-darkbrown:#423237;
+
+    /*fonts*/
+    --font-main: "Inter";
+}
