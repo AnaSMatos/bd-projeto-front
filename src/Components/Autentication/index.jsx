@@ -89,9 +89,7 @@ const ContentContainer = styled.div`
         box-sizing: border-box;
         padding: 8px 15px;
         font-size: 18px;
-        background-color: #f3efeb
-;
-        
+        background-color: #f3efeb;
         &:focus{
             outline: 1.2px solid #cbc6c1;
         }

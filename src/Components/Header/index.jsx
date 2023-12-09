@@ -42,7 +42,7 @@ const Header = () => {
             </MenuItems>
             <MenuItems>
                 <MenuButton 
-                        className={path === "criar-cota" ? "selected" : ""}
+                        className={path === "/criar-conta" ? "selected" : ""}
                         onClick={() => {
                             navigate("/criar-conta")
                         }}

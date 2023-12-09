@@ -2,22 +2,22 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Loading from "../Utils/Loading";
-import { GenericModal } from "../Utils/Modal";
+import { AddBookModal } from "./AddBookModal";
 
 const Books = () => {
     const [books, setBooks] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
     const [modalIsOpen, setIsOpen] = useState(false);
-
+    
     function openModal() {
         setIsOpen(true);
     }
 
     function closeModal() {
-        setIsOpen(false);
+        setIsOpen(false)
     }
-
+    
     useEffect(() => {
         setIsLoading(true)
         const promise = axios.get("https://bd-projeto-back.onrender.com/books")
@@ -48,9 +48,7 @@ const Books = () => {
 
     return(
         <ContentContainer>
-            <GenericModal modalIsOpen={modalIsOpen} closeModal={closeModal}>
-                conteudo modal
-            </GenericModal>
+            <AddBookModal modalIsOpen={modalIsOpen} closeModal={closeModal}/>
             <Search>
                 <input type="text" name="" id="" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                 <button onClick={searchBooks}><i className="fa-solid fa-magnifying-glass"></i></button>
