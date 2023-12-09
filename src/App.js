@@ -4,6 +4,7 @@ import Books from "./Components/Books";
 import Materials from "./Components/Materials";
 import Autentication from "./Components/Autentication";
 import Header from "./Components/Header";
+import SignUp from "./Components/CreateAccount";
 import '../src/Assets/reset.css'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/livros" element={<Books />} />
             <Route path="/materiais" element={<Materials />} />
             <Route path="/auth" element={<Autentication />} />
+            <Route path="/criar-conta" element={<SignUp />} />
         </Routes>
       </div>
     </BrowserRouter>

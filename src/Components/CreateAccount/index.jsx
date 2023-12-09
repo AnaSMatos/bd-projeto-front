@@ -1,19 +1,22 @@
-import React, {useState} from "react";
+import React, {useState} from "react"
+import axios from "axios"
 import styled from "styled-components";
 import Books from "../../Assets/auth-books.jpeg"
-import axios from "axios";
 
-
-const Login = () => {
+const SignUp = () => {
     const [isLoading, setIsLoading] = useState(false)
-    const [signInForm, setSignInForm] = useState({
+    const [signUpForm, setSignUpForm] = useState({
+        nome: "",
+        sobrenome: "",
         login: "",
-        senha: ""
+        senha: "",
+        funcao: "",
+        uri_foto: "",
     })
 
-    const handleLogin = () => {
+    const handleSignUp = () => {
         setIsLoading(true)
-        const promise = axios.post('https://bd-projeto-back.onrender.com/signin', signInForm)
+        const promise = axios.post('https://bd-projeto-back.onrender.com/signup', signUpForm)
         promise
         .then(res=>{
             console.log(res.data)
@@ -26,29 +29,28 @@ const Login = () => {
     }
 
     return(
-        <div>
-            <input type="email" name="email" placeholder="E-mail" value={signInForm.login} onChange={(e) => setSignInForm({...signInForm, login: e.target.value})}/>
-            <input type="password" name="password" placeholder="Senha" value={signInForm.senha} onChange={(e) => setSignInForm({...signInForm, senha: e.target.value})}/>
-            <SubmitButton onClick={handleLogin}>{isLoading ? "carregando..." : "Logar"}</SubmitButton>
-        </div>
-    )
-
-}
-  
-
-const Autentication = () => {   
-
-    return(
         <PageContainer>
             <ContentContainer>
                 <img src={Books} alt="" />
-                <Login/>
+                <div>
+                <input type="text" name="nome" placeholder="Nome" value={signUpForm.nome} onChange={(e) => setSignUpForm({...signUpForm, nome: e.target.value})}/>
+                <input type="text" name="sobrenome" placeholder="Sobrenome" value={signUpForm.sobrenome} onChange={(e) => setSignUpForm({...signUpForm, sobrenome: e.target.value})}/>
+                <input type="email" name="login" placeholder="E-mail" value={signUpForm.login} onChange={(e) => setSignUpForm({...signUpForm, login: e.target.value})}/>
+                <input type="password" name="senha" placeholder="Senha" value={signUpForm.senha} onChange={(e) => setSignUpForm({...signUpForm, senha: e.target.value})}/>
+                <select onChange={(e) => setSignUpForm({...signUpForm, funcao: e.target.value})} value={signUpForm.funcao}>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Chefe de Laboratorio">Chefe de Laboratório</option>
+                    <option value="Membro">Membro</option>
+                </select>
+                <input type="url" name="foto" placeholder="Foto (link)" value={signUpForm.uri_foto} onChange={(e) => setSignUpForm({...signUpForm, uri_foto: e.target.value})}/>
+                <SubmitButton onClick={handleSignUp}>{isLoading ? "carregando..." : "Criar conta"}</SubmitButton>
+            </div>
             </ContentContainer>
         </PageContainer>
     )
 }
 
-export default Autentication
+export default SignUp;
 
 //styles
 

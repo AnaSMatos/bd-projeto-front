@@ -1,54 +1,63 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
-    const [selectedItem, setSelectedItem] = useState("Home")
     const navigate = useNavigate()
+    const location = useLocation()
+
+    const path = location.pathname
+
     return (
         <HeaderContainer>
             <Title>
-                <i class="fa-solid fa-book-bookmark"></i>
-                Library
+                <i className="fa-solid fa-book-bookmark"></i>
+                BiblioTech
             </Title>
             <MenuItems>
                 <MenuButton 
-                    className={selectedItem === "Home" ? "selected" : ""}
+                    className={path === "/" ? "selected" : ""}
                     onClick={() => {
-                        setSelectedItem("Home");
                         navigate("/")
                     }}
                 >
                     Home
                 </MenuButton>
                 <MenuButton 
-                    className={selectedItem === "Livros" ? "selected" : ""}
+                    className={path === "/livros" ? "selected" : ""}
                     onClick={() => {
-                        setSelectedItem("Livros");
                         navigate("/livros")
                     }}
                 >
                     Livros
                 </MenuButton>
                 <MenuButton 
-                    className={selectedItem === "Materiais" ? "selected" : ""}
+                    className={path === "/materiais" ? "selected" : ""}
                     onClick={() => {
-                        setSelectedItem("Materiais");
                         navigate("/materiais")
                     }}
                 >
                     Materiais Didáticos
                 </MenuButton>
             </MenuItems>
-            <MenuButton 
-                    className={selectedItem === "Autenticar" ? "selected" : ""}
-                    onClick={() => {
-                        setSelectedItem("Autenticar");
-                        navigate("/auth")
-                    }}
-                >
-                    <i class="fa-solid fa-user"/>
-            </MenuButton>
+            <MenuItems>
+                <MenuButton 
+                        className={path === "criar-cota" ? "selected" : ""}
+                        onClick={() => {
+                            navigate("/criar-conta")
+                        }}
+                    >
+                        <i className="fa-solid fa-user-plus"></i> Criar conta
+                </MenuButton>
+                <MenuButton 
+                        className={path === "/auth" ? "selected" : ""}
+                        onClick={() => {
+                            navigate("/auth")
+                        }}
+                    >
+                        <i className="fa-solid fa-user"/> Entrar
+                </MenuButton>
+            </MenuItems>
         </HeaderContainer>
     )
 }
