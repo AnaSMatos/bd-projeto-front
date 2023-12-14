@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
+import UserContext from "../../UserContext";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -7,6 +8,7 @@ const Header = () => {
     const location = useLocation()
 
     const path = location.pathname
+    const { user } = useContext(UserContext)
 
     return (
         <HeaderContainer>
@@ -41,21 +43,44 @@ const Header = () => {
                 </MenuButton>
             </MenuItems>
             <MenuItems>
+                {user.token &&
+                <MenuButton
+                    className={path === "/emprestimos" ? "selected" : ""}
+                    onClick={() => {
+                        navigate("/emprestimos")
+                    }}
+                >
+                    <i class="fa-solid fa-handshake"></i>
+                    Empréstimos
+                </MenuButton>
+                }
                 <MenuButton 
-                        className={path === "/criar-conta" ? "selected" : ""}
-                        onClick={() => {
-                            navigate("/criar-conta")
-                        }}
-                    >
-                        <i className="fa-solid fa-user-plus"></i> Criar conta
+                    className={path === "/criar-conta" ? "selected" : ""}
+                    onClick={() => {
+                        navigate("/criar-conta")
+                    }}
+                >
+                    <i className="fa-solid fa-user-plus"></i> Criar conta
                 </MenuButton>
                 <MenuButton 
-                        className={path === "/auth" ? "selected" : ""}
-                        onClick={() => {
-                            navigate("/auth")
-                        }}
-                    >
-                        <i className="fa-solid fa-user"/> Entrar
+                    className={path === "/auth" ? "selected" : ""}
+                    onClick={() => {
+                        navigate("/auth")
+                    }}
+                    disabled={Object.keys(user).length}
+                >
+                    {(!user || !Object.keys(user).length) ? 
+                        <>
+                            <i className="fa-solid fa-user"></i> Entrar
+                        </>
+                        :
+                        <>
+                            <ImgWrapper>
+                                <img src={user.foto} alt="" />
+                            </ImgWrapper>
+                            {user.nome}
+                        </>
+                    }
                 </MenuButton>
             </MenuItems>
         </HeaderContainer>
@@ -99,7 +124,9 @@ const Title = styled.div`
 `
 
 const MenuButton = styled.button`
-    /* color: #423237; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
     border: none;
     border-radius: 4px;
@@ -108,8 +135,25 @@ const MenuButton = styled.button`
     cursor: pointer;
     font-size: 17px;
     font-weight: 600;
+    i{
+        margin-right: 7px;
+    }
     &.selected{
         background-color: #f3e6d8;
         color: #423237;
+    }
+    &:disabled{
+        cursor: default;
+    }
+`
+
+const ImgWrapper = styled.div`
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 7px;
+    img{
+        height: 45px;
     }
 `

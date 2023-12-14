@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
+import UserContext from "../../UserContext";
 import styled from "styled-components";
 import Books from "../../Assets/auth-books.jpeg"
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -10,14 +11,17 @@ const Login = () => {
         login: "",
         senha: ""
     })
+    const {setUser} = useContext(UserContext)
+    const navigate = useNavigate()
 
     const handleLogin = () => {
         setIsLoading(true)
         const promise = axios.post('https://bd-projeto-back.onrender.com/signin', signInForm)
         promise
         .then(res=>{
-            console.log(res.data)
             setIsLoading(false)
+            setUser({...res.data})
+            navigate("/")
         })
         .catch(err=>{
             console.log(err.response.data)
@@ -29,7 +33,7 @@ const Login = () => {
         <div>
             <input type="email" name="email" placeholder="E-mail" value={signInForm.login} onChange={(e) => setSignInForm({...signInForm, login: e.target.value})}/>
             <input type="password" name="password" placeholder="Senha" value={signInForm.senha} onChange={(e) => setSignInForm({...signInForm, senha: e.target.value})}/>
-            <SubmitButton onClick={handleLogin}>{isLoading ? "carregando..." : "Logar"}</SubmitButton>
+            <SubmitButton onClick={handleLogin} disabled={isLoading}>{isLoading ? "Entrando..." : "Logar"}</SubmitButton>
         </div>
     )
 
@@ -111,5 +115,13 @@ const SubmitButton = styled.button`
     cursor: pointer;
     &:hover{
         background-color: #f2efea;
+    }
+    &:disabled{
+        &:hover{
+            background-color: #fff;
+        }
+        cursor: default;
+        color: gray;
+        border: 2px solid #aaa;
     }
 `

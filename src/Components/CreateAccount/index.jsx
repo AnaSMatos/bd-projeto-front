@@ -19,7 +19,6 @@ const SignUp = () => {
         const promise = axios.post('https://bd-projeto-back.onrender.com/signup', signUpForm)
         promise
         .then(res=>{
-            console.log(res.data)
             setIsLoading(false)
         })
         .catch(err=>{

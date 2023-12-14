@@ -1,14 +1,17 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Loading from "../Utils/Loading";
 import { AddBookModal } from "./AddBookModal";
+import Book from "./Book";
+import UserContext from "../../UserContext";
 
 const Books = () => {
     const [books, setBooks] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
     const [modalIsOpen, setIsOpen] = useState(false);
+    const {user} = useContext(UserContext)
     
     function openModal() {
         setIsOpen(true);
@@ -54,14 +57,12 @@ const Books = () => {
                 <button onClick={searchBooks}><i className="fa-solid fa-magnifying-glass"></i></button>
             </Search>
             <BooksContainer>
-                <AddItem onClick={openModal}> + <i className="fa-solid fa-book"></i></AddItem>
+                {user.funcao == "Chefe de Laboratorio" &&
+                    <AddItem onClick={openModal}> + <i className="fa-solid fa-book"></i></AddItem>
+                }
                 {isLoading && <Loading/>}
                 {books?.map((book, index) => (
-                    <Book key={index}>
-                        <img src={book.uri_capa} alt="" />
-                        <p>{book.titulo}</p>
-                        <p>{book.autor}</p>
-                    </Book>
+                    <Book key={index} book={book}/>
                 ))}
             </BooksContainer>
         </ContentContainer>
@@ -83,22 +84,6 @@ const BooksContainer = styled.div`
     gap: 30px;
     padding: 20px 100px;
     position: relative;
-`
-
-const Book = styled.div`
-    background-color: #fff;
-    width: 200px;
-    height: 300px;
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 12px;
-    img{
-        width: 175px;
-        height: 230px;
-        margin-top: 12px;
-    }
 `
 
 const Search = styled.div`

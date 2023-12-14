@@ -1,11 +1,13 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import { GenericModal } from '../../Utils/Modal'
 import styled from "styled-components";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
+import UserContext from "../../../UserContext";
 
 export const AddBookModal = ({modalIsOpen, closeModal}) => {
     const [isLoading, setIsLoading] = useState(false)
+    const {user} = useContext(UserContext)
 
     const [bookForm, setBookForm] = useState({
         isbn: null, 
@@ -23,7 +25,16 @@ export const AddBookModal = ({modalIsOpen, closeModal}) => {
     const errorNotify = () => toast.error('Erro ao adicionar livro. Confira se todos os campos foram preenchidos corretamente');
     
     const submitNewBook = () => {
-        const promise = axios.post('https://bd-projeto-back.onrender.com/books', bookForm)
+        setIsLoading(true)
+        if(!user.token){
+            return toast.error('Você precisa estar logado para adicionar um livro')
+        }
+        const config = {
+            headers:{
+                Authorization: `Bearer ${user.token}`
+            }
+        }
+        const promise = axios.post('https://bd-projeto-back.onrender.com/books', bookForm, config)
         promise
         .then(res=>{
             successNotify()
@@ -78,7 +89,7 @@ export const AddBookModal = ({modalIsOpen, closeModal}) => {
                 <input type="text" name="uri_capa" id=""  placeholder="URL da imagem da capa"
                 value={bookForm.uri_capa} 
                 onChange={(e) => setBookForm({...bookForm, uri_capa: e.target.value})}/>
-                <SubmitButton onClick={submitNewBook}>Adicionar livro</SubmitButton>
+                <SubmitButton onClick={submitNewBook} disabled={isLoading}>Adicionar livro</SubmitButton>
             </FormContainer>
         </GenericModal>
     )

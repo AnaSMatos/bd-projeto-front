@@ -1,12 +1,25 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Loading from "../Utils/Loading";
+import Material from "./Material";
+import { AddMaterialModal } from "./AddMaterialModal";
+import UserContext from "../../UserContext";
 
 const Materials = () => {
     const [materials, setMaterials] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const {user} = useContext(UserContext)
+    
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function closeModal() {
+        setIsOpen(false)
+    }
 
     useEffect(() => {
         setIsLoading(true)
@@ -38,17 +51,18 @@ const Materials = () => {
 
     return(
         <ContentContainer>
+            <AddMaterialModal modalIsOpen={modalIsOpen} closeModal={closeModal}/>
             <Search>
                 <input type="text" name="" id="" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                 <button onClick={sarchMaterials}><i className="fa-solid fa-magnifying-glass"></i></button>
             </Search>
             <MaterialsContainer>
                 {isLoading && <Loading/>}
+                {user.funcao == "Chefe de Laboratorio" &&
+                    <AddItem onClick={openModal}> + <i className="fa-solid fa-book"></i></AddItem>
+                }
                 {materials?.map((material, index) => (
-                    <Material key={index}>
-                        <img src={material.uri_foto} alt="" />
-                        <p>{material.descricao}</p>
-                    </Material>
+                    <Material key={index} material={material} />
                 ))}
             </MaterialsContainer>
         </ContentContainer>
@@ -68,27 +82,11 @@ const MaterialsContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 30px;
-    padding: 0 100px;
-`
-
-const Material = styled.div`
-    background-color: #fff;
-    width: 200px;
-    height: 300px;
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 12px;
-    img{
-        width: 175px;
-        height: 230px;
-        margin-top: 12px;
-    }
+    padding: 20px 100px;
+    position: relative;
 `
 
 const Search = styled.div`
-    margin-bottom: 30px;
     padding-top: 20px;
     width: 100%;
     display: flex;
@@ -100,9 +98,9 @@ const Search = styled.div`
         height: 35px;
         border-radius: 5px 0 0 5px;
         border: none;
-        border-left: 1px solid #d9d9d9;
-        border-bottom: 1px solid #d9d9d9;
-        border-top: 1px solid #d9d9d9;
+        border-left: 1px solid #efefef;
+        border-bottom: 1px solid #efefef;
+        border-top: 1px solid #efefef;
         box-sizing: border-box;
         padding: 0 10px;
         &:focus{
@@ -113,10 +111,30 @@ const Search = styled.div`
         height: 35px;
         width: 40px;
         border: none;
-        border-right: 1px solid #d9d9d9;
-        border-bottom: 1px solid #d9d9d9;
-        border-top: 1px solid #d9d9d9;
+        border-right: 1px solid #efefef;
+        border-bottom: 1px solid #efefef;
+        border-top: 1px solid #efefef;
         border-radius: 0 5px 5px 0;
         cursor: pointer;
+    }
+`
+
+const AddItem = styled.button`
+    position: absolute;
+    background-color: #1da138;
+    border: none;
+    border-radius: 5px;
+    right: 30px;
+    width: 60px;
+    height: 40px;
+    color: #fff;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    i{
+        font-size: 20px;
+        margin-left: 4px;
     }
 `
