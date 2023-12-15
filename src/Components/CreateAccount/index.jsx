@@ -2,6 +2,8 @@ import React, {useState} from "react"
 import axios from "axios"
 import styled from "styled-components";
 import Books from "../../Assets/auth-books.jpeg"
+import { Toaster, toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -10,9 +12,10 @@ const SignUp = () => {
         sobrenome: "",
         login: "",
         senha: "",
-        funcao: "",
+        funcao: "Administrador",
         uri_foto: "",
     })
+    const navigate = useNavigate()
 
     const handleSignUp = () => {
         setIsLoading(true)
@@ -20,15 +23,18 @@ const SignUp = () => {
         promise
         .then(res=>{
             setIsLoading(false)
+            toast.success("Usuário criado com sucesso!")
         })
         .catch(err=>{
             console.log(err.response.data)
+            toast.error("Erro ao criar um novo usuário. Confirme que todos os campos estão preenchidos")
             setIsLoading(false)
         })
     }
 
     return(
         <PageContainer>
+            <Toaster/>
             <ContentContainer>
                 <img src={Books} alt="" />
                 <div>

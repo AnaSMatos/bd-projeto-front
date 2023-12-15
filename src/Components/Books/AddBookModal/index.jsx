@@ -5,7 +5,7 @@ import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
 import UserContext from "../../../UserContext";
 
-export const AddBookModal = ({modalIsOpen, closeModal}) => {
+export const AddBookModal = ({modalIsOpen, closeModal, getBooks}) => {
     const [isLoading, setIsLoading] = useState(false)
     const {user} = useContext(UserContext)
 
@@ -38,6 +38,19 @@ export const AddBookModal = ({modalIsOpen, closeModal}) => {
         promise
         .then(res=>{
             successNotify()
+            closeModal()
+            setBookForm({
+                isbn: null, 
+                titulo: null, 
+                autor: null, 
+                descricao: null, 
+                categoria: null, 
+                data_aquisicao: null, 
+                estado_conservacao: null, 
+                localizacao_fisica: null, 
+                uri_capa: null
+            })
+            getBooks()
             setIsLoading(false)
         })
         .catch(err=>{

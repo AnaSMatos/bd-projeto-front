@@ -81,7 +81,6 @@ const RentModal = ({modalIsOpen, closeModal, book}) => {
       returnDate.setDate(today.getDate() + 7);
 
       const formattedReturnDate = formatDateToString(returnDate).displayFormat
-      console.log(formatDateToString(returnDate).databaseFormat)
 
       const successNotify = () => toast.success('Livro alugado com sucesso!');
       const errorNotify = () => toast.error('Erro ao alugar livro');

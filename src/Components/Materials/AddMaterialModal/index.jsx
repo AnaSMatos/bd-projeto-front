@@ -5,7 +5,7 @@ import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
 import UserContext from "../../../UserContext";
 
-export const AddMaterialModal = ({modalIsOpen, closeModal}) => {
+export const AddMaterialModal = ({modalIsOpen, closeModal, getMaterials}) => {
     const [isLoading, setIsLoading] = useState(false)
     const {user} = useContext(UserContext)
 
@@ -33,6 +33,17 @@ export const AddMaterialModal = ({modalIsOpen, closeModal}) => {
         promise
         .then(res=>{
             successNotify()
+            closeModal()
+            setMaterialForm({
+                descricao: null, 
+                categoria: null, 
+                numero_serie: null, 
+                data_aquisicao: null, 
+                estado_conservacao: null, 
+                localizacao_fisica: null, 
+                uri_foto: null
+            })
+            getMaterials()
             setIsLoading(false)
         })
         .catch(err=>{

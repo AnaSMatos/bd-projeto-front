@@ -8,6 +8,7 @@ import Autentication from "./Components/Autentication";
 import Header from "./Components/Header";
 import SignUp from "./Components/CreateAccount";
 import Emprestimos from "./Components/Emprestimos";
+import Usuarios from "./Components/Usuarios";
 import UserContext from "./UserContext";
 import '../src/Assets/reset.css'
 import { useState } from "react";
@@ -27,6 +28,7 @@ function App() {
               <Route path="/material/:id" element={<MaterialDetails/>}/>
               <Route path="/auth" element={<Autentication />} />
               <Route path="/emprestimos" element={<Emprestimos />} />
+              <Route path="/usuarios" element={<Usuarios />} />
               <Route path="/criar-conta" element={<SignUp />} />
           </Routes>
         </div>

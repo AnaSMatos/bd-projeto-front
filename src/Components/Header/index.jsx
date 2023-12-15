@@ -8,7 +8,7 @@ const Header = () => {
     const location = useLocation()
 
     const path = location.pathname
-    const { user } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
 
     return (
         <HeaderContainer>
@@ -43,6 +43,17 @@ const Header = () => {
                 </MenuButton>
             </MenuItems>
             <MenuItems>
+                {user.funcao == "Administrador" &&
+                <MenuButton
+                    className={path === "/usuarios" ? "selected" : ""}
+                    onClick={() => {
+                        navigate("/usuarios")
+                    }}
+                >
+                    <i class="fa-solid fa-users"></i>
+                    Usuários
+                </MenuButton>
+                }
                 {user.token &&
                 <MenuButton
                     className={path === "/emprestimos" ? "selected" : ""}
@@ -54,6 +65,7 @@ const Header = () => {
                     Empréstimos
                 </MenuButton>
                 }
+                {user.funcao == "Administrador" &&
                 <MenuButton 
                     className={path === "/criar-conta" ? "selected" : ""}
                     onClick={() => {
@@ -62,6 +74,7 @@ const Header = () => {
                 >
                     <i className="fa-solid fa-user-plus"></i> Criar conta
                 </MenuButton>
+                }
                 <MenuButton 
                     className={path === "/auth" ? "selected" : ""}
                     onClick={() => {
@@ -82,6 +95,17 @@ const Header = () => {
                         </>
                     }
                 </MenuButton>
+                {!!Object.keys(user).length &&
+                <MenuButton 
+                    onClick={() => {
+                        setUser({})
+                    }}
+                >
+                    <>
+                    <i class="fa-solid fa-person-walking-arrow-right"></i>
+                    </>
+                </MenuButton>
+                }
             </MenuItems>
         </HeaderContainer>
     )

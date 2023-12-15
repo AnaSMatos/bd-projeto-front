@@ -21,7 +21,7 @@ const Materials = () => {
         setIsOpen(false)
     }
 
-    useEffect(() => {
+    const getMaterials = () => {
         setIsLoading(true)
         const promise = axios.get("https://bd-projeto-back.onrender.com/materials")
         promise
@@ -33,6 +33,10 @@ const Materials = () => {
             console.log(err.response.data)
             setIsLoading(false)
         })
+    }
+
+    useEffect(() => {
+        getMaterials()
     }, [])
 
     const sarchMaterials = () => {
@@ -51,7 +55,7 @@ const Materials = () => {
 
     return(
         <ContentContainer>
-            <AddMaterialModal modalIsOpen={modalIsOpen} closeModal={closeModal}/>
+            <AddMaterialModal modalIsOpen={modalIsOpen} closeModal={closeModal} getMaterials={getMaterials}/>
             <Search>
                 <input type="text" name="" id="" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                 <button onClick={sarchMaterials}><i className="fa-solid fa-magnifying-glass"></i></button>

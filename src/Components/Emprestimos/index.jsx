@@ -4,28 +4,45 @@ import styled from "styled-components";
 import { Toaster, toast } from "react-hot-toast";
 import Loading from "../Utils/Loading";
 import axios from "axios";
+import { ThreeDots } from 'react-loader-spinner'
+import { formatDateToString } from "../Utils/formatDate";
 
 const Emprestimos = () => {
     const {user} = useContext(UserContext)
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingPage, setIsLoadingPage] = useState(false)
+    const [isLoadingFunction, setIsLoadingFunction] = useState(false)
     const [loan, setLoan] = useState([])
 
-    const getLoans = () => {
-        const config = {
-            headers:{
-                Authorization: `Bearer ${user.token}`
-            }
-        }
+    const LoadingFunction = () => {
+        return(
+            <ThreeDots 
+                height="15" 
+                width="30" 
+                radius="9"
+                color="gray" 
+                ariaLabel="three-dots-loading"
+                visible={true}
+            />
+        )
+    }
 
+    const config = {
+        headers:{
+            Authorization: `Bearer ${user.token}`
+        }
+    }
+
+    const getLoans = () => {
+        setIsLoadingPage(true)
         const promise = axios.get(`https://bd-projeto-back.onrender.com/loans?id=${user.id}`, config)
         promise
         .then(res=>{
-            setIsLoading(false)
+            setIsLoadingPage(false)
             setLoan(res.data)
         })
         .catch(err=>{
             console.log(err.response.data)
-            setIsLoading(false)
+            setIsLoadingPage(false)
         })
     }
 
@@ -33,13 +50,41 @@ const Emprestimos = () => {
         getLoans()
     }, [])
 
-    const returnItem = (loan) => {
-        const config = {
-            headers:{
-                Authorization: `Bearer ${user.token}`
-            }
-        }
+    const getFormattedDate = (loan) => {
+        let returnDate = new Date(loan.data_devolucao_prevista);
+        returnDate.setDate(returnDate.getDate() + 1);
+        return formatDateToString(returnDate).displayFormat
+    }
 
+    const renewLoan = (loan) => {
+        let returnDate = new Date(loan.data_devolucao_prevista);
+        returnDate.setDate(returnDate.getDate() + 7);
+
+        const formattedNewDate = formatDateToString(returnDate)
+        console.log(formattedNewDate)
+
+        const params = {
+            loan_id: loan.id,
+            delivery_date: formattedNewDate.databaseFormat
+        }
+        const promise = axios.post(`https://bd-projeto-back.onrender.com/renew`, params, config)
+        promise
+        .then(res => {
+            setIsLoadingFunction(false)
+            toast.success(`Empréstimo renovado até dia ${formattedNewDate.displayFormat}`)
+            getLoans()
+        })
+        .catch(err => {
+            console.log(err.response.data)
+            toast.error("Erro ao renovar o item.")
+            setIsLoadingFunction(false)
+        })
+    }
+
+    console.log(isLoadingFunction)
+
+    const returnItem = (loan) => {
+        setIsLoadingFunction(true)
         const parseParameters = () => {
             const parsedLivro = loan.id_livro ? parseInt(loan.id_livro) : null
             const parsedMaterial = loan.id_material_didatico ? parseInt(loan.id_material_didatico) : null
@@ -55,18 +100,21 @@ const Emprestimos = () => {
         const promise = axios.post(`https://bd-projeto-back.onrender.com/return`, params, config)
         promise
         .then(res=>{
-            setIsLoading(false)
+            setIsLoadingFunction(false)
+            toast.success("Item devolvido!")
             getLoans()
         })
         .catch(err=>{
             console.log(err.response.data)
-            setIsLoading(false)
+            toast.error("Erro ao devolver item.")
+            setIsLoadingFunction(false)
         })
     }
 
     return(
         <Container>
-            {isLoading ? 
+            <Toaster/>
+            {isLoadingPage ? 
             <Loading/> 
             : 
             <LoansContainer>
@@ -80,9 +128,15 @@ const Emprestimos = () => {
                             <p>{item.item_nome}</p>
                             <h3>Autor/Categoria:</h3>
                             <p>{item.item_autor}</p>
+                            <h3>Data de devolução:</h3>
+                            <p>{getFormattedDate(item)}</p>
                             <Buttons>
-                                <button onClick={() => returnItem(item)}>Devolver</button>
-                                <button>Renovar</button>
+                                {isLoadingFunction ? <LoadingFunction/> : 
+                                <>
+                                    <button onClick={() => returnItem(item)}>Devolver</button>
+                                    <button onClick={() => renewLoan(item)}>Renovar</button>
+                                </>
+                                }
                             </Buttons>
                         </div>
                     </Loan>
@@ -112,6 +166,7 @@ const LoansContainer = styled.div`
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
+    gap: 15px;
 `
 
 const Loan = styled.div`
@@ -125,8 +180,8 @@ const Loan = styled.div`
     position: relative;
     h3{
         font-weight: 600;
-        margin-bottom: 8px;
-        font-size: 18px;
+        margin-bottom: 5px;
+        font-size: 17px;
     }
     p{
         margin-bottom: 8px;

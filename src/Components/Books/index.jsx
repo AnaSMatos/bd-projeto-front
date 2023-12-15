@@ -20,8 +20,8 @@ const Books = () => {
     function closeModal() {
         setIsOpen(false)
     }
-    
-    useEffect(() => {
+
+    const getBooks = () => {
         setIsLoading(true)
         const promise = axios.get("https://bd-projeto-back.onrender.com/books")
         promise
@@ -33,6 +33,10 @@ const Books = () => {
             console.log(err.response.data)
             setIsLoading(false)
         })
+    }
+    
+    useEffect(() => {
+        getBooks()
     }, [])
 
     const searchBooks = () => {
@@ -51,7 +55,7 @@ const Books = () => {
 
     return(
         <ContentContainer>
-            <AddBookModal modalIsOpen={modalIsOpen} closeModal={closeModal}/>
+            <AddBookModal modalIsOpen={modalIsOpen} closeModal={closeModal} getBooks={getBooks}/>
             <Search>
                 <input type="text" name="" id="" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                 <button onClick={searchBooks}><i className="fa-solid fa-magnifying-glass"></i></button>
