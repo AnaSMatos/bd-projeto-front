@@ -6,6 +6,8 @@ import Loading from "../Utils/Loading";
 import axios from "axios";
 import { ThreeDots } from 'react-loader-spinner'
 import { formatDateToString } from "../Utils/formatDate";
+import {Unauthorized} from '../Utils/Unauthorized'
+
 
 const Emprestimos = () => {
     const {user} = useContext(UserContext)
@@ -81,8 +83,6 @@ const Emprestimos = () => {
         })
     }
 
-    console.log(isLoadingFunction)
-
     const returnItem = (loan) => {
         setIsLoadingFunction(true)
         const parseParameters = () => {
@@ -110,6 +110,8 @@ const Emprestimos = () => {
             setIsLoadingFunction(false)
         })
     }
+
+    if(!user.token) return <Unauthorized/>
 
     return(
         <Container>

@@ -99,6 +99,7 @@ const Header = () => {
                 <MenuButton 
                     onClick={() => {
                         setUser({})
+                        navigate('/')
                     }}
                 >
                     <>

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
+import UserContext from '../../UserContext'
+import {Unauthorized} from '../Utils/Unauthorized'
 
 const User = ({user, getUsers}) => {
     const [editMode, setEditMode] = useState(false)
@@ -74,6 +76,7 @@ const User = ({user, getUsers}) => {
 
 const Usuarios = () => {
     const [users, setUsers] = useState([])
+    const { user } = useContext(UserContext)
     const getUsers = () => {
         const promise = axios.get("https://bd-projeto-back.onrender.com/users")
         promise
@@ -86,15 +89,22 @@ const Usuarios = () => {
     }
     
     useEffect(() => {
-        getUsers()
-    }, [])
+        if(user.funcao == "Administrador") getUsers()
+    }, [user.funcao])
 
     return(
-        <Container>
-        {users?.map((user, index) => (
-            <User user={user} key={index} getUsers={getUsers}/>
-        ))}
-        </Container>
+        <>
+        {
+            (!user.token || user.funcao != "Administrador") ? 
+            <Unauthorized role={"Administrador"}/>
+            :
+            <Container>
+            {users?.map((user, index) => (
+                <User user={user} key={index} getUsers={getUsers}/>
+            ))}
+            </Container>
+        }
+        </>
     )
 }
 

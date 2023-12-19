@@ -1,9 +1,11 @@
-import React, {useState} from "react"
+import React, {useState, useContext} from "react"
 import axios from "axios"
 import styled from "styled-components";
 import Books from "../../Assets/auth-books.jpeg"
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Unauthorized } from "../Utils/Unauthorized";
+import UserContext from "../../UserContext";
 
 const SignUp = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -15,7 +17,7 @@ const SignUp = () => {
         funcao: "Administrador",
         uri_foto: "",
     })
-    const navigate = useNavigate()
+    const { user } = useContext(UserContext)
 
     const handleSignUp = () => {
         setIsLoading(true)
@@ -31,6 +33,8 @@ const SignUp = () => {
             setIsLoading(false)
         })
     }
+
+    if(!user.token || !user.funcao == "Administrador") return <Unauthorized role={"Administrador"}/>
 
     return(
         <PageContainer>
