@@ -63,7 +63,6 @@ const Emprestimos = () => {
         returnDate.setDate(returnDate.getDate() + 7);
 
         const formattedNewDate = formatDateToString(returnDate)
-        console.log(formattedNewDate)
 
         const params = {
             loan_id: loan.id,

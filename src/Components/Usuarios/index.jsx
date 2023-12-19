@@ -39,7 +39,7 @@ const User = ({user, getUsers}) => {
             <Toaster/>
             <EditDelete>
                 <button onClick={() => setEditMode(!editMode)}><i class="fa-solid fa-pen"></i></button>
-                <button onClick={deleteUser}><i class="fa-solid fa-trash"></i></button>
+                {user.id != 10 && <button onClick={deleteUser}><i class="fa-solid fa-trash"></i></button>}
             </EditDelete>
             <ImgWrapper>
                 <img src={user.uri_foto} alt="" />
@@ -65,7 +65,11 @@ const User = ({user, getUsers}) => {
                     <h3>Login</h3>
                     <input type="text" value={editedUser.login} onChange={(e) => setEditedUser({...editedUser, login: e.target.value})} />
                     <h3>Função</h3>
-                    <input type="text" value={editedUser.funcao} onChange={(e) => setEditedUser({...editedUser, funcao: e.target.value})} />
+                    <select onChange={(e) => setEditedUser({...editedUser, funcao: e.target.value})} value={editedUser.funcao}>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Chefe de Laboratorio">Chefe de Laboratório</option>
+                        <option value="Membro">Membro</option>
+                    </select>
                     <button className="save" onClick={editUser}>Salvar</button>
                 </>
                 }
